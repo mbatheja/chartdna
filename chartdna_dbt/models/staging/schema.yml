@@ -1,0 +1,33 @@
+version: 2
+
+models: 
+  - name: stg_tracks
+    columns:
+      - name: track_name
+        tests:
+          - not_null
+      - name: artist_name
+        tests:
+          - not_null
+      - name: rank
+        tests:
+          - not_null
+      - name: play_count
+        tests:
+          - not_null
+    
+  - name: stg_artists
+    columns:
+      - name: artist_name
+        tests:
+          - not_null
+  
+  - name: stg_track_tags
+    columns:
+      - name: track_name
+        tests:
+          - not_null
+      - name: tag_name
+        tests:
+          - not_null
+

@@ -1,0 +1,6 @@
+requests==2.31.0
+duckdb==1.5.3
+python-dotenv==1.0.0
+pandas
+numpy
+dbt-duckdb

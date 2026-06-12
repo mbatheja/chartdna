@@ -1,0 +1,33 @@
+# Environments
+venv/
+venv_linux/
+.env
+
+# Python
+__pycache__/
+*.pyc
+
+# Data
+data/
+*.duckdb
+
+# dbt
+chartdna_dbt/target/
+chartdna_dbt/dbt_packages/
+chartdna_dbt/logs/
+
+# Airflow
+airflow/airflow.db
+airflow/airflow.cfg
+airflow/logs/
+airflow/webserver_config.py
+airflow/*.pid
+airflow/*.err
+airflow/*.log
+airflow/*.out
+airflow/dags/__pycache__/
+logs/
+
+# OS
+.DS_Store
+Thumbs.db

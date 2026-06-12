@@ -1,0 +1,9 @@
+version: 2
+
+sources:
+  - name: lastfm
+    schema: main
+    tables:
+    - name: raw_tracks
+    - name: raw_artists
+    - name: raw_track_tags
