@@ -4,3 +4,5 @@ python-dotenv==1.0.0
 pandas
 numpy
 dbt-duckdb
+scikit-learn
+matplotlib
