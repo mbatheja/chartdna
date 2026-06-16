@@ -31,14 +31,24 @@ def run_ingestion():
 
 with dag:
     ingest_task = PythonOperator(
-        task_id="fetch_and_store_charts",
-        python_callable=run_ingestion,
+        task_id = "fetch_and_store_charts",
+        python_callable = run_ingestion,
     )
 
     dbt_task = BashOperator(
-        task_id="run_dbt_tasks",
-        bash_command="source '/mnt/c/Users/Mahima Batheja/Project/chartdna/venv_linux/bin/activate' && cd '/mnt/c/Users/Mahima Batheja/Project/chartdna/chartdna_dbt' && dbt run && dbt test && dbt docs generate"
+        task_id = "run_dbt_tasks",
+        bash_command = "source '/mnt/c/Users/Mahima Batheja/Project/chartdna/venv_linux/bin/activate' && cd '/mnt/c/Users/Mahima Batheja/Project/chartdna/chartdna_dbt' && dbt run && dbt test && dbt docs generate"
 
     )
 
-    ingest_task >> dbt_task
+    ml_task = BashOperator(
+        task_id = "run_ml_task",
+        bash_command = "source '/mnt/c/Users/Mahima Batheja/Project/chartdna/venv_linux/bin/activate' && cd '/mnt/c/Users/Mahima Batheja/Project/chartdna/ml' && python tag_clustering.py && python anomaly_detection.py"
+    )
+
+    llm_task = BashOperator(
+        task_id = "run_llm_task",
+        bash_command = "source '/mnt/c/Users/Mahima Batheja/Project/chartdna/venv_linux/bin/activate' && cd '/mnt/c/Users/Mahima Batheja/Project/chartdna/llm' && python trend_report.py && python semantic_search.py"
+    )
+
+    ingest_task >> dbt_task >> ml_task >> llm_task
