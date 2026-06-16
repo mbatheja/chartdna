@@ -40,6 +40,7 @@ HAVING COUNT(*) >= 4
     return df
 
 def generate_safe_bet() -> str:
+    """ Generate explanation and strategic recommendation for music studios on the next assured hit given current trends """
     context = get_safe_bet_context()
     client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 

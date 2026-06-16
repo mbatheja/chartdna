@@ -31,15 +31,11 @@ def find_similar_tracks(df: pd.DataFrame, similarity_matrix, track_name: str, ar
         return pd.DataFrame()
     
     track_idx = matches.index[0]
-
     similarity_scores = similarity_matrix[track_idx]
-
     similar_indices = similarity_scores.argsort()[::-1]
-
     similar_indices = [i for i in similar_indices if i != track_idx][: top_n]
-
+    
     results = df.iloc[similar_indices][["track_name", "artist_name", "top_tags"]].copy()
-
     results["similarity_score"] = similarity_scores[similar_indices]
 
     return results

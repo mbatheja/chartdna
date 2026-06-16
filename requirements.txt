@@ -6,3 +6,7 @@ numpy
 dbt-duckdb
 scikit-learn
 matplotlib
+openai
+fastapi
+uvicorn
+streamlit
