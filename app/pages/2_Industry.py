@@ -1,12 +1,13 @@
 import streamlit as st
 import requests
 import pandas as pd
+import os
 
-API_URL = "http://localhost:8000"
+API_URL = os.getenv("API_URL", "http://localhost:8000")
 
 st.set_page_config(page_title="Industry - ChartDNA", page_icon="🎸", layout="wide")
 
-st.title("👩🏻‍💼Industry")
+st.title("🕴🏻Industry")
 st.caption("Insights into billboard trends for you studio")
 
 tab1, tab2, tab3 = st.tabs(["💓 Music Pulse", "🛟 Safe Bet", "👥 Cluster Analytics"])

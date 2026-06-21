@@ -1,0 +1,48 @@
+services:
+  fastapi:
+   build: .
+   command: uvicorn api.main:app --host 0.0.0.0 --port 8000
+   ports:
+     - "8001:8000"
+   volumes:
+     - .:/app
+     - duckdb_data:/data
+   env_file:
+     - .env
+   environment:
+     - DB_PATH=/data/chartdna.duckdb
+    
+  streamlit:
+    build: .
+    command: streamlit run app/Home.py --server.port 8501 --server.address 0.0.0.0
+    ports:
+     - "8501:8501"
+    volumes:
+     - .:/app
+     - duckdb_data:/data
+    env_file:
+     - .env
+    environment:
+     - API_URL=http://fastapi:8000
+     - DB_PATH=/data/chartdna.duckdb
+    depends_on:
+     - fastapi
+  
+  airflow:
+    build: .
+    command: bash -c "airflow db migrate && airflow users create --username admin --password admin123 --firstname admin --lastname admin --role Admin --email admin@chartdna.com && airflow webserver & airflow scheduler"
+    ports:
+      - "8080:8080"
+    volumes:
+      - .:/app
+      - duckdb_data:/data
+    env_file:
+      - .env
+    environment:
+      - AIRFLOW_HOME=/app/airflow
+      - DB_PATH=/data/chartdna.duckdb
+      - AIRFLOW__CORE__EXECUTOR=SequentialExecutor
+      - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=sqlite:////app/airflow/airflow.db
+      - AIRFLOW__CORE__LOAD_EXAMPLES=False
+volumes:
+  duckdb_data:
