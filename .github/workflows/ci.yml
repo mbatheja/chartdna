@@ -1,0 +1,45 @@
+name: ChartDNA CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  dbt-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.12"
+      
+      - name: Install dependencies
+        run: pip install dbt-duckdb
+
+      - name: Create test database
+        run: |
+         python -c "
+         import duckdb
+         conn = duckdb.connect('/tmp/chartdna_test.duckdb')
+         conn.execute('CREATE TABLE IF NOT EXISTS raw_tracks (track_name VARCHAR, artist_name VARCHAR, playcount BIGINT, listeners BIGINT, url VARCHAR, rank INTEGER, fetched_at TIMESTAMP, week_start DATE)')
+         conn.execute('CREATE TABLE IF NOT EXISTS raw_artists (artist_name VARCHAR, listeners BIGINT, playcount BIGINT, url VARCHAR, fetched_at TIMESTAMP, week_start DATE)')
+         conn.execute('CREATE TABLE IF NOT EXISTS raw_track_tags (track_name VARCHAR, artist_name VARCHAR, tag_name VARCHAR, tag_count INTEGER, fetched_at TIMESTAMP, week_start DATE)')
+         conn.close()
+         print('Test database created')
+         "
+
+      - name: Run dbt tests
+        working-directory: chartdna_dbt
+        env:
+          DB_PATH: /tmp/chartdna_test.duckdb
+        run: |
+          dbt deps
+          dbt seed --profiles-dir .
+          dbt run --profiles-dir .
+          dbt test --profiles-dir .

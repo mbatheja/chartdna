@@ -1,0 +1,8 @@
+chartdna_dbt:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      path: "{{ env_var('DB_PATH', '/tmp/chartdna_test.duckdb') }}"
+      schema: main
+      threads: 4
